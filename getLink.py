@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 """
+    THIS FILE DOESN"T DO ANYTHING THAT WE WANT IT TO DO. USE IT FOR REFERENCE
     get_links.py
 
     MediaWiki API Demos

@@ -1,8 +1,11 @@
 import requests
 
+# GETS THE LIST OF LINKS FROM A WEBPAGE. CHANGE THE GIVEN LINE
+
 def query(request):
     request['action'] = 'query'
     request['format'] = 'json'
+    # CHANGE THIS LINE
     request['titles'] = "Miss Meyers"
     request["prop"] = "links"
     lastContinue = {}
