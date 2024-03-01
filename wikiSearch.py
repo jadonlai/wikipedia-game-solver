@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 
-import sys, requests, time
+import sys, requests, time, gensim, warnings
+from gensim.models import Word2Vec
+from nltk.tokenize import sent_tokenize, word_tokenize
 
 
 
@@ -73,6 +75,17 @@ def print_links(title):
     for link in get_links(title):
         print(link)
 
+
+
+# Given a word and list of links, return a sorted array of the most similar words as tuples
+def get_similarities(word, links):
+    # Setup the list of words
+    links.insert(0, start)
+    links = [[x] for x in links]
+    # Create model
+    model = gensim.models.Word2Vec(links, min_count=1, vector_size=len(links), window=5)
+    # Return list of words, sorted by the most similar
+    return model.wv.most_similar(start, topn=len(links) - 1)
 
 
 # Given a parent, start, and end, return the optimal path
@@ -175,6 +188,9 @@ if __name__ == '__main__':
     # Start = Deodorant
     # End = Parachute
     # Optimal is 3 steps (Deodorant -> Inventor -> Parachute)
+            
+    # TESTING WORD2VEC
+    print(get_similarities(start, get_links(start)))
 
     if algorithm == 'bfs':
         print(bfs(start, end))
