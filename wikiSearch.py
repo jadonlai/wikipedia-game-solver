@@ -3,11 +3,13 @@
 import sys, requests, time, gensim, warnings
 from gensim.models import Word2Vec
 from nltk.tokenize import sent_tokenize, word_tokenize
+from sentence_transformers import SentenceTransformer, util
+from queue import PriorityQueue
 
 
 
 MAX_NODES = 100000
-MAX_TIME = 60
+MAX_TIME = 3600
 
 v = 0
 
@@ -77,15 +79,37 @@ def print_links(title):
 
 
 
+# Word2Vec version that will compute words based on their similarity in alphabetical order (doesn't work)
+# def get_similarities(word, links):
+#     # Setup the list of words
+#     links.insert(0, word)
+#     links = [[x] for x in links]
+#     # Create model
+#     model = gensim.models.Word2Vec(links, min_count=1, vector_size=len(links), window=5)
+#     # Return list of words, sorted by the most similar
+#     return model.wv.most_similar(word, topn=len(links) - 1)
+
 # Given a word and list of links, return a sorted array of the most similar words as tuples
 def get_similarities(word, links):
-    # Setup the list of words
-    links.insert(0, start)
-    links = [[x] for x in links]
-    # Create model
-    model = gensim.models.Word2Vec(links, min_count=1, vector_size=len(links), window=5)
-    # Return list of words, sorted by the most similar
-    return model.wv.most_similar(start, topn=len(links) - 1)
+    res = []
+    # Init model
+    model = SentenceTransformer('all-MiniLM-L6-v2')
+
+    # Compute embedding for both word and links
+    embeddings1 = model.encode([word], convert_to_tensor=True)
+    embeddings2 = model.encode(links, convert_to_tensor=True)
+    # Compute cosine-similarities
+    cosine_scores = util.cos_sim(embeddings1, embeddings2)
+
+    # Add word and similarity to res list
+    for i in range(len(links)):
+        res.append([links[i], cosine_scores[0][i].item()])
+
+    # Sort the res list by similarity
+    res.sort(key=lambda x:x[1], reverse=True)
+    
+    return res
+
 
 
 # Given a parent, start, and end, return the optimal path
@@ -98,7 +122,7 @@ def backtrace(parent, start, end):
 
 
 
-# Given a start and end goal, find the end goal from the start using BFS and return the optimal path and search dist
+# Given a start and end goal, find the end goal from the start using BFS and return the optimal path, search dist, and time
 # Return None if no path is found or if a path is too long
 def bfs(start, end):
     # Start timer
@@ -113,7 +137,7 @@ def bfs(start, end):
 
     # BFS
     while queue:
-        # Run for max one minute
+        # Run for max MAX_TIME
         if time.time() - start_time > MAX_TIME:
             print('Exceeded max time')
             return None
@@ -125,7 +149,8 @@ def bfs(start, end):
 
         # Verbosity
         if v >= 1:
-            print('Distance:', dist, '-', 'Node:', node)
+            print('Distance:', dist)
+            print('Node:', node)
         if v == 2:
             print('Elapsed Time:', round(time.time() - start_time, 3))
         print()
@@ -138,7 +163,7 @@ def bfs(start, end):
         
         # Check if the node is the end
         if node == end:
-            return backtrace(parent, start, end), dist
+            return backtrace(parent, start, end), dist, time.time() - start_time
         # Add adjacent nodes to the queue
         for adjacent in get_links(node):
             if adjacent not in parent:
@@ -148,18 +173,132 @@ def bfs(start, end):
 
 
 
-def dfs():
-    pass
+# UNFINISHED
+def dfs(visited, node, end):
+    if node not in visited:
+        visited.add(node)
+        for adjacent in get_links(node):
+            dfs(visited, adjacent, end)
+        if node == end:
+            return visited
 
 
 
-def gbfs():
-    pass
+# Given a start and end goal, find the end goal from the start using GBFS and return the path, search dist, and time
+# Return None if no path is found or if a path is too long
+def gbfs(start, end):
+    # Start timer
+    start_time = time.time()
+
+    # Init variables
+    dist = 0
+    parent = {}
+    parent[start] = None
+    visited = [False] * MAX_NODES
+    pq = PriorityQueue()
+    pq.put((0, start))
+    visited = set()
+
+    # GBFS
+    while pq.empty() == False:
+        # Run for max MAX_TIME
+        if time.time() - start_time > MAX_TIME:
+            print('Exceeded max time')
+            return None
+        
+        # Get the most similar link
+        sim, node = pq.get()
+        # Don't revisit a node
+        if node in visited:
+            continue
+        # Increment the dist
+        dist += 1
+
+        # Verbosity
+        if v >= 1:
+            print('Distance:', dist)
+            print('Node:', node)
+        if v == 2:
+            print('Heuristic:', sim)
+            print('Elapsed Time:', round(time.time() - start_time, 3))
+        print()
+
+        # Run for max MAX_NODES nodes
+        if dist > MAX_NODES:
+            print('Exceeded max nodes')
+            return None
+        
+        # Add node to visited
+        visited.add(node)
+        # Check if node is the end
+        if node == end:
+            return backtrace(parent, start, end), dist, time.time() - start_time
+        # Get children
+        similarities = get_similarities(end, get_links(node))
+        # Add adjacent nodes to priority queue
+        for link, similarity in similarities:
+            if link not in visited:
+                parent[link] = node
+                pq.put((1 - similarity, link))
 
 
 
-def astar():
-    pass
+# Given a start and end goal, find the end goal from the start using A* and return the path, search dist, and time
+# Return None if no path is found or if a path is too long
+def astar(start, end):
+    # Start timer
+    start_time = time.time()
+
+    # Init variables
+    dist = 0
+    parent = {}
+    parent[start] = None
+    visited = [False] * MAX_NODES
+    pq = PriorityQueue()
+    pq.put((0, start))
+    visited = set()
+
+    # A*
+    while pq.empty() == False:
+        # Run for max MAX_TIME
+        if time.time() - start_time > MAX_TIME:
+            print('Exceeded max time')
+            return None
+        
+        # Get the most similar link
+        sim, node = pq.get()
+        # Don't revisit a node
+        if node in visited:
+            continue
+        # Increment the dist
+        dist += 1
+
+        # Verbosity
+        if v >= 1:
+            print('Distance:', dist)
+            print('Node:', node)
+        if v == 2:
+            print('Cost + Heuristic:', sim)
+            print('Elapsed Time:', round(time.time() - start_time, 3))
+        print()
+
+        # Run for max MAX_NODES nodes
+        if dist > MAX_NODES:
+            print('Exceeded max nodes')
+            return None
+        
+        # Add node to visited
+        visited.add(node)
+        # Check if node is the end
+        if node == end:
+            return backtrace(parent, start, end), dist, time.time() - start_time
+        # Get children
+        similarities = get_similarities(end, get_links(node))
+        # Add adjacent nodes to priority queue
+        for link, similarity in similarities:
+            if link not in visited:
+                parent[link] = node
+                pq.put((sim + 1 - similarity, link))
 
 
 
@@ -188,9 +327,6 @@ if __name__ == '__main__':
     # Start = Deodorant
     # End = Parachute
     # Optimal is 3 steps (Deodorant -> Inventor -> Parachute)
-            
-    # TESTING WORD2VEC
-    print(get_similarities(start, get_links(start)))
 
     if algorithm == 'bfs':
         print(bfs(start, end))
