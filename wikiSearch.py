@@ -164,7 +164,6 @@ def bfs(start, end):
             print('Elapsed Time:', round(time.time() - start_time, 3))
         print()
 
-
         # Run for max MAX_NODES nodes
         if dist > MAX_NODES:
             print('Exceeded max nodes')
@@ -192,9 +191,9 @@ def dfs(visited, node, end):
 
 
 
-# Given a start and end goal, find the end goal from the start using GBFS and return the path, search dist, and time
+# Given a start and end goal, find the end goal from the start using GBFS or A* and return the path, search dist, and time
 # Return None if no path is found or if a path is too long
-def gbfs(start, end):
+def gbfs_astar(algorithm, start, end):
     # Start timer
     start_time = time.time()
 
@@ -211,7 +210,7 @@ def gbfs(start, end):
     times = []
     fig, ax = plt.subplots()
 
-    # GBFS
+    # GBFS or A*
     while pq.empty() == False:
         # Run for max MAX_TIME
         if time.time() - start_time > MAX_TIME:
@@ -231,7 +230,12 @@ def gbfs(start, end):
             print('Distance:', dist)
             print('Node:', node)
         if v == 2:
-            print('Heuristic:', sim)
+            # GBFS
+            if algorithm == 'gbfs':
+                print('Heuristic: ', sim)
+            # A*
+            else:
+                print('Cost + Heuristic:', sim)
             print('Elapsed Time:', round(time.time() - start_time, 3))
         print()
 
@@ -267,86 +271,12 @@ def gbfs(start, end):
         for link, similarity in similarities:
             if link not in visited:
                 parent[link] = node
-                pq.put((1 - similarity, link))
-
-
-
-# Given a start and end goal, find the end goal from the start using A* and return the path, search dist, and time
-# Return None if no path is found or if a path is too long
-def astar(start, end):
-    # Start timer
-    start_time = time.time()
-
-    # Init variables
-    dist = 0
-    parent = {}
-    parent[start] = None
-    visited = [False] * MAX_NODES
-    pq = PriorityQueue()
-    pq.put((0, start))
-    visited = set()
-    nodes = []
-    heuristics = []
-    times = []
-    fig, ax = plt.subplots()
-
-    # A*
-    while pq.empty() == False:
-        # Run for max MAX_TIME
-        if time.time() - start_time > MAX_TIME:
-            print('Exceeded max time')
-            return None
-        
-        # Get the most similar link
-        sim, node = pq.get()
-        # Don't revisit a node
-        if node in visited:
-            continue
-        # Increment the dist
-        dist += 1
-
-        # Verbosity
-        if v >= 1:
-            print('Distance:', dist)
-            print('Node:', node)
-        if v == 2:
-            print('Cost + Heuristic:', sim)
-            print('Elapsed Time:', round(time.time() - start_time, 3))
-        print()
-
-        # Graph
-        nodes.append(node)
-        heuristics.append(sim)
-        times.append(time.time() - start_time)
-
-        # Run for max MAX_NODES nodes
-        if dist > MAX_NODES:
-            print('Exceeded max nodes')
-            return None
-        
-        # Add node to visited
-        visited.add(node)
-        # Check if node is the end
-        if node == end:
-            # Plot times vs. heuristics
-            if (v >= 1):
-                ax.plot(times, heuristics, marker='o')
-                for i in range(len(times)):
-                    ax.text(times[i], heuristics[i], nodes[i], fontsize=5)
-                plt.savefig(f'{start}_{end}_plot.png')
-            # Return path
-            return backtrace(parent, start, end), dist, time.time() - start_time
-        # Get children
-        links = get_links(node)
-        # Continue to the next link if no children
-        if links == None:
-            continue
-        similarities = get_similarities(end, links)
-        # Add adjacent nodes to priority queue
-        for link, similarity in similarities:
-            if link not in visited:
-                parent[link] = node
-                pq.put((sim + 1 - similarity, link))
+                # GBFS
+                if algorithm == 'gbfs':
+                    pq.put((1 - similarity, link))
+                # A*
+                else:
+                    pq.put((sim + 1 - similarity, link))
 
 
 
@@ -380,9 +310,7 @@ if __name__ == '__main__':
         print(bfs(start, end))
     elif algorithm == 'dfs':
         print(dfs(start, end))
-    elif algorithm == 'gbfs':
-        print(gbfs(start, end))
-    elif algorithm == 'astar':
-        print(astar(start, end))
+    elif algorithm == 'gbfs' or algorithm == 'astar':
+        print(gbfs_astar(algorithm, start, end))
     elif algorithm == 'machine_learning':
         print(machine_learning(start, end))
