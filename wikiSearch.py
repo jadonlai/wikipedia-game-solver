@@ -11,6 +11,7 @@ from matplotlib import pyplot as plt
 
 MAX_NODES = 100000
 MAX_TIME = 3600
+COST = 0.5
 
 v = 0
 
@@ -30,6 +31,24 @@ format = {'pages':
                      {'ns':10, 'title':'Template:Inflation/US'},
                      {'ns':14, 'title':'Category:Use American English from July 2017'},
                      {'ns':14, 'title':'Category:Use mdy dates from July 2021'}]}}}
+
+
+
+# Class to represent a link and its information
+class Link:
+    def __init__(self, name, f, g, h, level):
+        self.name = name
+        self.g = g
+        self.h = h
+        self.f = self.g + self.h
+        self.level = level
+
+    def __lt__(self, other):
+        return self.f < other.f
+
+    # Calculate the f value
+    def set_f(self):
+        self.f = self.g + self.h
 
 
 
@@ -207,7 +226,7 @@ def gbfs_astar(algorithm, start, end):
     parent[start] = None
     visited = [False] * MAX_NODES
     pq = PriorityQueue()
-    pq.put((0, start))
+    pq.put(Link(start, 0, 0, 0, 0))
     visited = set()
     nodes = []
     heuristics = []
@@ -222,30 +241,32 @@ def gbfs_astar(algorithm, start, end):
             return None
         
         # Get the most similar link
-        sim, node = pq.get()
+        node = pq.get()
         # Don't revisit a node
-        if node in visited:
+        if node.name in visited:
             continue
         # Increment the dist
         dist += 1
 
         # Verbosity
         if v >= 1:
-            print('Distance:', dist)
-            print('Node:', node)
+            print('Node:', node.name)
         if v == 2:
+            print('Level:', node.level)
             # GBFS
             if algorithm == 'gbfs':
-                print('Heuristic: ', sim)
+                print('Heuristic:', node.h)
             # A*
             else:
-                print('Cost + Heuristic:', sim)
+                print('Cost + Heuristic:', node.f)
+            print('Priority Queue Size:', pq.qsize())
+            print('Distance:', dist)
             print('Elapsed Time:', round(time.time() - start_time, 3))
         print()
 
         # Graph
-        nodes.append(node)
-        heuristics.append(sim)
+        nodes.append(node.name)
+        heuristics.append(node.f)
         times.append(time.time() - start_time)
 
         # Run for max MAX_NODES nodes
@@ -254,9 +275,9 @@ def gbfs_astar(algorithm, start, end):
             return None
         
         # Add node to visited
-        visited.add(node)
+        visited.add(node.name)
         # Check if node is the end
-        if node.lower() == end.lower():
+        if node.name.lower() == end.lower():
             # Plot times vs. heuristics
             if (v >= 1):
                 ax.plot(times, heuristics, marker='o')
@@ -264,9 +285,9 @@ def gbfs_astar(algorithm, start, end):
                     ax.text(times[i], heuristics[i], nodes[i], fontsize=5)
                 plt.savefig(f'{start}_{end}_{algorithm}_plot.png')
             # Return path
-            return backtrace(parent, start, node), dist, time.time() - start_time
+            return backtrace(parent, start, node.name), dist, time.time() - start_time
         # Get children
-        links = get_links(node)
+        links = get_links(node.name)
         # Continue to the next link if no children
         if links == None:
             continue
@@ -274,13 +295,15 @@ def gbfs_astar(algorithm, start, end):
         # Add adjacent nodes to priority queue
         for link, similarity in similarities:
             if link not in visited:
-                parent[link] = node
-                # GBFS
-                if algorithm == 'gbfs':
-                    pq.put((1 - similarity, link))
-                # A*
-                else:
-                    pq.put((sim + 1 - similarity, link))
+                parent[link] = node.name
+                # Set link class
+                link = Link(link, 0, 0, 1 - similarity, node.level + 1)
+                # A* includes cost
+                if algorithm == 'astar':
+                    link.g = link.g + node.h
+                # Set f and put the link into the queue
+                link.set_f()
+                pq.put(link)
 
 
 
