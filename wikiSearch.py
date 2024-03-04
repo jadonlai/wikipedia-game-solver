@@ -64,6 +64,7 @@ def get_links(title):
     for result in query(title):
         # Access the list of links
         reskey = result['pages'].keys()
+        # No links
         if 'missing' in result['pages'][list(reskey)[0]]:
             return None
         lists = result['pages'][list(reskey)[0]]['links']
@@ -71,6 +72,9 @@ def get_links(title):
         for link in lists:
             if (':' not in link['title']):
                 res.append(link['title'])
+    # No links
+    if len(res) == 0:
+        return None
     return res
 
 
@@ -170,14 +174,14 @@ def bfs(start, end):
             return None
         
         # Check if the node is the end
-        if node == end:
-            return backtrace(parent, start, end), dist, time.time() - start_time
+        if node.lower() == end.lower():
+            return backtrace(parent, start, node), dist, time.time() - start_time
         # Add adjacent nodes to the queue
         links = get_links(node)
         # Continue to the next link if no children
         if links == None:
             continue
-        for adjacent in get_links(node):
+        for adjacent in links:
             if adjacent not in parent:
                 parent[adjacent] = node
                 queue.append(adjacent)
@@ -252,7 +256,7 @@ def gbfs_astar(algorithm, start, end):
         # Add node to visited
         visited.add(node)
         # Check if node is the end
-        if node == end:
+        if node.lower() == end.lower():
             # Plot times vs. heuristics
             if (v >= 1):
                 ax.plot(times, heuristics, marker='o')
@@ -260,7 +264,7 @@ def gbfs_astar(algorithm, start, end):
                     ax.text(times[i], heuristics[i], nodes[i], fontsize=5)
                 plt.savefig(f'{start}_{end}_plot.png')
             # Return path
-            return backtrace(parent, start, end), dist, time.time() - start_time
+            return backtrace(parent, start, node), dist, time.time() - start_time
         # Get children
         links = get_links(node)
         # Continue to the next link if no children
