@@ -262,7 +262,7 @@ def gbfs_astar(algorithm, start, end):
                 ax.plot(times, heuristics, marker='o')
                 for i in range(len(times)):
                     ax.text(times[i], heuristics[i], nodes[i], fontsize=5)
-                plt.savefig(f'{start}_{end}_plot.png')
+                plt.savefig(f'{start}_{end}_{algorithm}_plot.png')
             # Return path
             return backtrace(parent, start, node), dist, time.time() - start_time
         # Get children

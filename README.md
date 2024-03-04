@@ -1,7 +1,7 @@
 # 480_Wikipedia
 
 Modules:
-requests, nltk, gensim
+requests, nltk, gensim, sentence_transformers, matplotlib
 
 Make the executable:
 ln -s wikiSearch.py wikiSearch
