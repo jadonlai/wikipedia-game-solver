@@ -5,6 +5,7 @@ from gensim.models import Word2Vec
 from nltk.tokenize import sent_tokenize, word_tokenize
 from sentence_transformers import SentenceTransformer, util
 from queue import PriorityQueue
+from matplotlib import pyplot as plt
 
 
 
@@ -55,7 +56,7 @@ def query(title):
 
 
 
-# Given a title, get the list of links
+# Given a title, get the list of links or None if it doesn't exist
 def get_links(title):
     # Init res list
     res = []
@@ -63,6 +64,8 @@ def get_links(title):
     for result in query(title):
         # Access the list of links
         reskey = result['pages'].keys()
+        if 'missing' in result['pages'][list(reskey)[0]]:
+            return None
         lists = result['pages'][list(reskey)[0]]['links']
         # Append each link
         for link in lists:
@@ -76,6 +79,12 @@ def get_links(title):
 def print_links(title):
     for link in get_links(title):
         print(link)
+
+
+
+# Given a list of times and a list of heuristics, plot the heuristics vs. time
+def plot(times, heuristics):
+    plt.plot(times, heuristics)
 
 
 
@@ -165,6 +174,10 @@ def bfs(start, end):
         if node == end:
             return backtrace(parent, start, end), dist, time.time() - start_time
         # Add adjacent nodes to the queue
+        links = get_links(node)
+        # Continue to the next link if no children
+        if links == None:
+            continue
         for adjacent in get_links(node):
             if adjacent not in parent:
                 parent[adjacent] = node
@@ -175,12 +188,7 @@ def bfs(start, end):
 
 # UNFINISHED
 def dfs(visited, node, end):
-    if node not in visited:
-        visited.add(node)
-        for adjacent in get_links(node):
-            dfs(visited, adjacent, end)
-        if node == end:
-            return visited
+    return None
 
 
 
@@ -198,6 +206,10 @@ def gbfs(start, end):
     pq = PriorityQueue()
     pq.put((0, start))
     visited = set()
+    nodes = []
+    heuristics = []
+    times = []
+    fig, ax = plt.subplots()
 
     # GBFS
     while pq.empty() == False:
@@ -223,6 +235,11 @@ def gbfs(start, end):
             print('Elapsed Time:', round(time.time() - start_time, 3))
         print()
 
+        # Graph
+        nodes.append(node)
+        heuristics.append(sim)
+        times.append(time.time() - start_time)
+
         # Run for max MAX_NODES nodes
         if dist > MAX_NODES:
             print('Exceeded max nodes')
@@ -232,9 +249,20 @@ def gbfs(start, end):
         visited.add(node)
         # Check if node is the end
         if node == end:
+            # Plot times vs. heuristics
+            if (v >= 1):
+                ax.plot(times, heuristics, marker='o')
+                for i in range(len(times)):
+                    ax.text(times[i], heuristics[i], nodes[i], fontsize=5)
+                plt.savefig(f'{start}_{end}_plot.png')
+            # Return path
             return backtrace(parent, start, end), dist, time.time() - start_time
         # Get children
-        similarities = get_similarities(end, get_links(node))
+        links = get_links(node)
+        # Continue to the next link if no children
+        if links == None:
+            continue
+        similarities = get_similarities(end, links)
         # Add adjacent nodes to priority queue
         for link, similarity in similarities:
             if link not in visited:
@@ -257,6 +285,10 @@ def astar(start, end):
     pq = PriorityQueue()
     pq.put((0, start))
     visited = set()
+    nodes = []
+    heuristics = []
+    times = []
+    fig, ax = plt.subplots()
 
     # A*
     while pq.empty() == False:
@@ -282,6 +314,11 @@ def astar(start, end):
             print('Elapsed Time:', round(time.time() - start_time, 3))
         print()
 
+        # Graph
+        nodes.append(node)
+        heuristics.append(sim)
+        times.append(time.time() - start_time)
+
         # Run for max MAX_NODES nodes
         if dist > MAX_NODES:
             print('Exceeded max nodes')
@@ -291,9 +328,20 @@ def astar(start, end):
         visited.add(node)
         # Check if node is the end
         if node == end:
+            # Plot times vs. heuristics
+            if (v >= 1):
+                ax.plot(times, heuristics, marker='o')
+                for i in range(len(times)):
+                    ax.text(times[i], heuristics[i], nodes[i], fontsize=5)
+                plt.savefig(f'{start}_{end}_plot.png')
+            # Return path
             return backtrace(parent, start, end), dist, time.time() - start_time
         # Get children
-        similarities = get_similarities(end, get_links(node))
+        links = get_links(node)
+        # Continue to the next link if no children
+        if links == None:
+            continue
+        similarities = get_similarities(end, links)
         # Add adjacent nodes to priority queue
         for link, similarity in similarities:
             if link not in visited:
