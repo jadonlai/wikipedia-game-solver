@@ -300,7 +300,7 @@ def gbfs_astar(algorithm, start, end):
                 link = Link(link, 0, 0, 1 - similarity, node.level + 1)
                 # A* includes cost
                 if algorithm == 'astar':
-                    link.g = link.g + node.h
+                    link.g = node.f
                 # Set f and put the link into the queue
                 link.set_f()
                 pq.put(link)
