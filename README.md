@@ -1,7 +1,9 @@
 # 480_Wikipedia
 
 Modules:
-requests, nltk, gensim, sentence_transformers, matplotlib, plotly, kaleido
+requests, sentence_transformers, plotly, kaleido
+Optional Modules:
+nltk, gensim, matplotlib
 
 Install a module:
 pip3 install module_name

@@ -2,23 +2,23 @@
 
 import sys, requests, time, gensim, warnings, csv
 import plotly.express as px
-from gensim.models import Word2Vec
-from nltk.tokenize import sent_tokenize, word_tokenize
+# from gensim.models import Word2Vec
+# from nltk.tokenize import sent_tokenize, word_tokenize
 from sentence_transformers import SentenceTransformer, util
 from queue import PriorityQueue
-from matplotlib import pyplot as plt
+# from matplotlib import pyplot as plt
 
 
 
 MAX_NODES = 200
 MAX_TIME = 900
-COST = 0.5
 
 v = 0
 
 
 
-# Format of the query completing
+'''
+Format of the query completing
 format = {'pages':
           {'22822937':
            {'pageid':22822937, 'ns':0, 'title':'Miss Meyers',
@@ -32,18 +32,20 @@ format = {'pages':
                      {'ns':10, 'title':'Template:Inflation/US'},
                      {'ns':14, 'title':'Category:Use American English from July 2017'},
                      {'ns':14, 'title':'Category:Use mdy dates from July 2021'}]}}}
+'''
 
 
 
 # Class to represent a link and its information
 class Link:
-    def __init__(self, name, f, g, h, level):
+    def __init__(self, name, g, h, level):
         self.name = name
         self.g = g
         self.h = h
         self.f = self.g + self.h
         self.level = level
 
+    # Compare links based on their f values
     def __lt__(self, other):
         return self.f < other.f
 
@@ -182,7 +184,7 @@ def bfs(start, end):
     parent = {}
     parent[start] = None
     queue = []
-    queue.append(Link(start, 0, 0, 0, 0))
+    queue.append(Link(start, 0, 0, 0))
     res = [['Node', 'Level', 'Queue Size', 'Distance', 'Elapsed Time']]
 
     # BFS
@@ -241,8 +243,7 @@ def bfs(start, end):
         for adjacent in links:
             if adjacent not in parent:
                 parent[adjacent] = node.name
-                queue.append(Link(adjacent, 0, 0, 0, node.level + 1))
-    sys.exit()
+                queue.append(Link(adjacent, 0, 0, node.level + 1))
 
 
 
@@ -303,8 +304,7 @@ def dfs(node, start, end, parent=None, dist=0, start_time=time.time(), res = [['
     for adjacent in links:
         if adjacent not in parent:
             parent[adjacent] = node.name
-            dfs(Link(adjacent, 0, 0, 0, node.level + 1), start, end, parent, dist + 1, start_time)
-    sys.exit()
+            dfs(Link(adjacent, 0, 0, node.level + 1), start, end, parent, dist + 1, start_time)
 
 
 
@@ -321,7 +321,7 @@ def gbfs_astar(algorithm, start, end):
     parent[start] = None
     visited = [False] * MAX_NODES
     pq = PriorityQueue()
-    pq.put(Link(start, 0, 0, 0, 0))
+    pq.put(Link(start, 0, 0, 0))
     visited = set()
     nodes = []
     heuristics = []
@@ -418,14 +418,13 @@ def gbfs_astar(algorithm, start, end):
             if link not in visited:
                 parent[link] = node.name
                 # Set link class
-                link = Link(link, 0, 0, 1 - similarity, node.level + 1)
+                link = Link(link, 0, 1 - similarity, node.level + 1)
                 # A* includes cost
                 if algorithm == 'astar':
                     link.g = node.f
                 # Set f and put the link into the queue
                 link.set_f()
                 pq.put(link)
-    sys.exit()
 
 
 
@@ -458,7 +457,7 @@ if __name__ == '__main__':
     if algorithm == 'bfs':
         print(bfs(start, end))
     elif algorithm == 'dfs':
-        print(dfs(Link(start, 0, 0, 0, 0), start, end))
+        print(dfs(Link(start, 0, 0, 0), start, end))
     elif algorithm == 'gbfs' or algorithm == 'astar':
         print(gbfs_astar(algorithm, start, end))
     elif algorithm == 'machine_learning':
