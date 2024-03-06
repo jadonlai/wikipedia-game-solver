@@ -1,9 +1,9 @@
 Node,Level,Total Cost,Priority Queue Size,Distance,Elapsed Time
-Red algae,0,0,0,1,0.0
-Andreaeobryum,1,0.6533469557762146,566,2,14.972
-Andreaeopsida,2,0.6443549990653992,607,3,17.216
-Richard Wettstein,1,0.6767258644104004,607,4,18.796
-Vienna,2,0.5556465983390808,643,5,21.661
-Wolfgang Amadeus Mozart,3,-1.1920928955078125e-07,1644,6,45.707
+Red algae,0,0,0,0,0.0
+Andreaeobryum,1,0.6533469557762150,566,1,14.972
+Andreaeopsida,2,0.6443549990653990,607,2,17.216
+Richard Wettstein,1,0.6767258644104000,607,3,18.796
+Vienna,2,0.5556465983390810,643,4,21.661
+Wolfgang Amadeus Mozart,3,-1.19209289550781E-07,1644,5,45.707
 
 "['Red algae', 'Richard Wettstein', 'Vienna', 'Wolfgang Amadeus Mozart']"

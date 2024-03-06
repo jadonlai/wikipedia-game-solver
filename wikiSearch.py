@@ -174,7 +174,7 @@ def bfs(start, end):
     start_time = time.time()
 
     # Init variables
-    dist = 0
+    dist = -1
     parent = {}
     parent[start] = None
     queue = []
@@ -310,7 +310,7 @@ def gbfs_astar(algorithm, start, end):
     start_time = time.time()
 
     # Init variables
-    dist = 0
+    dist = -1
     parent = {}
     parent[start] = None
     visited = [False] * MAX_NODES
