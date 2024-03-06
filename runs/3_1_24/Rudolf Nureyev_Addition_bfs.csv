@@ -1,0 +1,186 @@
+Node,Level,Queue Size,Distance,Elapsed Time
+Rudolf Nureyev,0,0,1,0.0
+AIDS,1,244,2,4.448
+Adolphe Adam,1,244,3,4.763
+Afternoon of a Faun (Nijinsky),1,757,4,13.676
+Alexander Ivanovich Pushkin,1,1212,5,21.058
+Alkeyevsky District,1,1212,6,21.192
+American Ballet Theatre,1,1342,7,23.343
+André Malraux,1,1648,8,29.402
+Andy Warhol,1,2034,9,37.483
+Anna Kisselgoff,1,2681,10,50.43
+Annette Page,1,2851,11,53.781
+Antoinette Sibley,1,2857,12,54.157
+Apollo (ballet),1,2880,13,55.263
+"Asanovo, Republic of Bashkortostan",1,3164,14,61.454
+August Bournonville,1,3254,15,63.258
+Australian Ballet,1,3370,16,65.778
+Austria,1,3369,17,65.912
+"Baby, It's Cold Outside",1,4286,18,83.993
+Barry Kay,1,5328,19,104.306
+Bashkir language,1,5361,20,105.276
+Bashkortostan,1,5670,21,111.289
+Bavarian State Ballet,1,6047,22,119.474
+Bavarian State Opera,1,6046,23,119.61
+Bell Telephone Hour,1,6298,24,124.827
+Bolshoi Theatre,1,6298,25,125.005
+Brooklyn Academy of Music,1,6379,26,127.144
+Carla Fracci,1,6833,27,136.016
+Centre National du Costume de Scene,1,6869,28,137.747
+Chicago Ballet,1,6869,29,137.92
+Christopher Gable,1,7040,30,144.651
+Cinderella (Prokofiev),1,7090,31,146.249
+Cold War,1,7370,32,152.089
+Colum McCann,1,9497,33,193.421
+Commandeur,1,9720,34,198.57
+Coppélia,1,9720,35,198.764
+Curtain call,1,9938,36,204.209
+Cynthia Gregory,1,9963,37,204.915
+Dacha,1,9987,38,205.988
+Dame Margot Fonteyn,1,10081,39,208.509
+Dancer (novel),1,10080,40,208.689
+Danish people,1,10084,41,209.062
+David Winters (choreographer),1,10084,42,209.244
+Deauville,1,10237,43,212.691
+Don Quixote (ballet),1,10953,44,226.124
+Dutch National Ballet,1,11056,45,231.779
+Eastern Bloc emigration and defection,1,11115,46,235.704
+Eastern Slavic naming customs,1,11114,47,235.879
+Encyclopædia Britannica,1,11515,48,243.849
+Erik Bruhn,1,11768,49,249.714
+Eva Evdokimova,1,11795,50,251.581
+Exposed (1983 film),1,11803,51,252.419
+Faber and Faber,1,11835,52,253.383
+Flower Festival in Genzano,1,11936,53,255.871
+Fred Astaire,1,11946,54,256.67
+Freddie Mercury,1,12851,55,282.174
+Frederick Ashton,1,13344,56,293.241
+Gay bar,1,13450,57,296.872
+Gayane (ballet),1,13993,58,307.521
+Gelsey Kirkland,1,14041,59,309.237
+Gene Kelly,1,14062,60,310.629
+George Balanchine,1,14392,61,326.024
+Giselle,1,14479,62,330.886
+Glen Tetley,1,14552,63,334.791
+Gore Vidal,1,14562,64,335.599
+Grand Ballet du Marquis de Cuevas,1,14919,65,343.473
+Grand Théâtre de Bordeaux,1,14919,66,343.627
+HIV,1,14938,67,344.48
+HIV-positive people,1,15567,68,355.688
+Haight-Ashbury,1,15580,69,359.228
+Hamlet (Tchaikovsky),1,15885,70,365.078
+Hans van Manen,1,16126,71,369.562
+Hodder & Stoughton,1,16145,72,370.5
+IMDb (identifier),1,16354,73,374.591
+ISBN (identifier),1,16353,74,374.904
+ISSN (identifier),1,16353,75,375.212
+Ilsur Metshin,1,16353,76,375.499
+Individualism,1,16369,77,375.969
+Internet Broadway Database,1,17688,78,400.388
+Irkutsk,1,17697,79,400.896
+Isabelle Guérin,1,17992,80,407.632
+Jack Lang (French politician),1,18002,81,408.393
+Jackie Kennedy Onassis,1,18144,82,412.575
+Jessye Norman,1,18144,83,412.731
+Jim Henson,1,18686,84,426.791
+John Rockwell,1,19477,85,443.618
+John Tooley,1,19500,86,444.641
+KGB,1,19512,87,445.266
+Karen Kain,1,19838,88,462.778
+Kazan,1,19881,89,464.192
+Kazan Governorate,1,20323,90,477.195
+Kelim,1,20546,91,482.016
+Ken Russell,1,20546,92,482.167
+Kenneth MacMillan,1,20813,93,489.478
+Kirill Serebrennikov,1,21077,94,496.946
+Kirov Ballet,1,21159,95,499.1
+Konstantin Sergeyev,1,21158,96,499.257
+Kremlin,1,21165,97,500.052
+La Bayadere,1,21406,98,505.199
+La Bayadère,1,21408,99,505.36
+La Danse (film),1,21462,100,508.55
+La Esmeralda (ballet),1,21497,101,509.477
+La Scala Theatre Ballet,1,21553,102,512.036
+La Sylphide,1,21568,103,515.146
+Laurencia (ballet),1,21601,104,517.811
+Laurent Hilaire,1,21606,105,518.116
+Le Bourget Airport,1,21607,106,518.739
+Le Corsaire,1,21607,107,518.904
+Le Monde,1,21649,108,522.198
+Le Spectre de la Rose,1,21778,109,525.308
+Le Spectre de la rose,1,21777,110,525.464
+Le jeune homme et la mort,1,21794,111,526.244
+Lee Radziwill,1,21847,112,527.724
+Legacy Walk,1,21939,113,530.041
+Legion of Honour,1,22005,114,531.643
+Leningrad,1,22338,115,538.15
+Les Sylphides,1,22337,116,538.468
+Les Échos (France),1,22369,117,540.057
+Leslie Caron,1,22369,118,540.209
+Levallois-Perret,1,22602,119,546.629
+Library of Congress,1,22821,120,551.085
+List of Eastern Bloc defectors,1,23658,121,567.712
+List of Russian ballet dancers,1,23658,122,567.869
+List of dancers,1,23870,123,574.232
+Liszt,1,24122,124,582.814
+Liza Minnelli,1,24121,125,582.978
+London Festival Ballet,1,24583,126,598.625
+Lucette Aldous,1,24582,127,598.771
+Ludwig Minkus,1,24608,128,599.881
+Lynn Seymour,1,24650,129,602.249
+Manuel Legris,1,24684,130,604.335
+Margot Fonteyn,1,24711,131,606.567
+Marguerite and Armand,1,24850,132,611.961
+Maria Tallchief,1,24876,133,613.377
+Mariinsky Ballet,1,25182,134,623.369
+Mariinsky Theatre,1,25222,135,628.507
+Marius Petipa,1,25254,136,630.394
+Martha Graham,1,25396,137,636.599
+Maurice Béjart,1,25650,138,648.713
+Metropolitan Opera,1,25673,139,650.126
+Mick Jagger,1,26011,140,658.466
+Mikhail Baryshnikov,1,26584,141,676.26
+Mikhail Gorbachev,1,26672,142,682.891
+Mintimer Shaimiev,1,28154,143,722.541
+Miss Piggy,1,28178,144,723.872
+Monica Mason,1,28339,145,729.617
+Monique Loudières,1,28343,146,731.243
+Nastassja Kinski,1,28345,147,732.036
+Natalia Dudinskaya,1,28520,148,736.758
+Night Journey (ballet),1,28520,149,737.564
+Nikita Khrushchev,1,28530,150,738.195
+Nina Anisimova (dancer),1,29127,151,760.591
+Nina Vyroubova,1,29130,152,761.084
+Ninel Kurgapkina,1,29135,153,761.874
+Ninette de Valois,1,29135,154,762.322
+OCLC (identifier),1,29203,155,766.023
+ORTF,1,29204,156,766.331
+Oleg Ivenko,1,29204,157,766.482
+Oleg Vinogradov,1,29203,158,766.798
+Ordre des Arts et des Lettres,1,29215,159,767.879
+Orpheus (ballet),1,29218,160,770.477
+Palais Garnier,1,29283,161,776.209
+Paris Opera Ballet,1,29541,162,782.629
+Patronymic,1,29626,163,788.867
+Pericarditis,1,29853,164,798.042
+Petrouchka,1,30107,165,802.921
+Petrushka (ballet),1,30106,166,803.219
+Piano Sonata (Liszt),1,30192,167,808.007
+Pierre Bergé,1,30192,168,808.169
+Ralph Fiennes,1,30239,169,809.741
+Raymonda,1,30680,170,822.48
+Red Army,1,30710,171,825.231
+Ringo Starr,1,30995,172,833.591
+Robert Helpmann,1,31776,173,850.666
+Robert McG. Thomas Jr.,1,32049,174,857.253
+Robert Tracy (dancer),1,32057,175,857.732
+Roland Petit,1,32062,176,858.376
+Romeo and Juliet (Nureyev),1,32077,177,859.519
+Romeo and Juliet (Prokofiev),1,32239,178,862.793
+Royal Academy of Dance,1,32280,179,870.265
+Royal Danish Ballet,1,32405,180,875.495
+Rudolph Valentino,1,32440,181,879.684
+Russian gay propaganda law,1,32641,182,884.843
+Russian language,1,32856,183,890.702
+
+Exceeded max time
