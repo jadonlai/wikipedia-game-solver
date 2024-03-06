@@ -10,8 +10,8 @@ from queue import PriorityQueue
 
 
 
-MAX_NODES = 200
-MAX_TIME = 900
+MAX_NODES = 10000
+MAX_TIME = 36000
 
 v = 0
 
