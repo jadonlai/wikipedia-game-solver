@@ -123,12 +123,6 @@ def save_to_csv(array, start, end, algorithm):
 
 
 
-# Given a list of times and a list of heuristics, plot the heuristics vs. time
-def plot(times, heuristics):
-    plt.plot(times, heuristics)
-
-
-
 # Word2Vec version that will compute words based on their similarity in alphabetical order (doesn't work)
 # def get_similarities(word, links):
 #     # Setup the list of words
@@ -428,11 +422,6 @@ def gbfs_astar(algorithm, start, end):
 
 
 
-def machine_learning():
-    pass
-
-
-
 if __name__ == '__main__':
     # Parse args
     args = sys.argv[1:]
@@ -442,7 +431,7 @@ if __name__ == '__main__':
     start = args[0]
     end = args[1]
     algorithm = args[2]
-    if algorithm not in ['bfs', 'dfs', 'gbfs', 'astar', 'machine_learning']:
+    if algorithm not in ['bfs', 'dfs', 'gbfs', 'astar']:
         print('Invalid algorithm')
         exit(1)
     if len(args) == 4:
@@ -460,7 +449,3 @@ if __name__ == '__main__':
         print(dfs(Link(start, 0, 0, 0), start, end))
     elif algorithm == 'gbfs' or algorithm == 'astar':
         print(gbfs_astar(algorithm, start, end))
-    elif algorithm == 'machine_learning':
-        print('Not yet implemented')
-        sys.exit()
-        print(machine_learning(start, end))

@@ -1,0 +1,98 @@
+Node,Level,Queue Size,Distance,Elapsed Time
+Rugby World Cup,0,0,1,0.0
+1900 Summer Olympics,1,760,2,17.617
+1908 Summer Olympics,1,1239,3,30.133
+1920 Summer Olympics,1,1450,4,39.967
+1924 Summer Olympics,1,1591,5,48.044
+1936 FIRA Tournament,1,1723,6,55.706
+1936 Summer Olympics,1,1809,7,58.041
+1987 Rugby World Cup,1,2114,8,71.049
+1987 Rugby World Cup final,1,2306,9,78.523
+1987 Rugby World Cup knockout stage,1,2510,10,86.399
+1987 Rugby World Cup squads,1,2604,11,92.637
+1987 Rugby World Cup statistics,1,3007,12,111.231
+1991 Rugby World Cup,1,3010,13,115.064
+1991 Rugby World Cup final,1,3152,14,122.742
+1991 Rugby World Cup knockout stage,1,3352,15,130.138
+1991 Rugby World Cup qualifying,1,3351,16,130.362
+1991 Rugby World Cup squads,1,3363,17,133.159
+1991 Rugby World Cup statistics,1,3653,18,149.477
+1995 Rugby World Cup,1,3656,19,153.65
+1995 Rugby World Cup final,1,3802,20,161.574
+1995 Rugby World Cup knockout stage,1,5479,21,204.253
+1995 Rugby World Cup qualifying,1,5478,22,204.416
+1995 Rugby World Cup squads,1,5483,23,206.837
+1995 Rugby World Cup statistics,1,5756,24,223.805
+1999 Rugby World Cup,1,5755,25,226.955
+1999 Rugby World Cup final,1,5936,26,235.908
+1999 Rugby World Cup knockout stage,1,5954,27,243.05
+1999 Rugby World Cup qualifying,1,5953,28,243.258
+1999 Rugby World Cup squads,1,5958,29,245.612
+1999 Rugby World Cup statistics,1,6384,30,265.909
+2003 Rugby World Cup,1,6389,31,269.663
+2003 Rugby World Cup final,1,6582,32,278.9
+2003 Rugby World Cup knockout stage,1,6695,33,290.289
+2003 Rugby World Cup qualifying,1,6749,34,297.756
+2003 Rugby World Cup squads,1,6831,35,301.848
+2003 Rugby World Cup statistics,1,7130,36,321.653
+2007 Rugby World Cup,1,7133,37,325.099
+2007 Rugby World Cup final,1,7232,38,331.8
+2007 Rugby World Cup knockout stage,1,7253,39,339.479
+2007 Rugby World Cup qualifying,1,7326,40,346.864
+2007 Rugby World Cup squads,1,7335,41,349.457
+2007 Rugby World Cup statistics,1,7742,42,370.936
+2011 Rugby World Cup,1,7745,43,374.796
+2011 Rugby World Cup final,1,7826,44,380.883
+2011 Rugby World Cup knockout stage,1,7849,45,389.463
+2011 Rugby World Cup qualifying,1,7928,46,396.909
+2011 Rugby World Cup squads,1,7928,47,399.106
+2011 Rugby World Cup statistics,1,8237,48,420.667
+2015 Rugby World Cup,1,8242,49,429.184
+2015 Rugby World Cup final,1,8551,50,441.989
+2015 Rugby World Cup knockout stage,1,8572,51,452.176
+2015 Rugby World Cup qualifying,1,8651,52,460.873
+2015 Rugby World Cup squads,1,8659,53,463.795
+2015 Rugby World Cup statistics,1,9007,54,488.422
+2019 Rugby World Cup,1,9007,55,497.695
+2019 Rugby World Cup final,1,9298,56,510.532
+2019 Rugby World Cup knockout stage,1,9313,57,519.185
+2019 Rugby World Cup qualifying,1,9383,58,527.673
+2019 Rugby World Cup squads,1,9389,59,531.028
+2019 Rugby World Cup statistics,1,9711,60,558.157
+2021 Rugby World Cup,1,9715,61,568.578
+2023 Rugby World Cup,1,10000,62,577.756
+2023 Rugby World Cup final,1,10254,63,589.695
+2023 Rugby World Cup knockout stage,1,10271,64,598.838
+2023 Rugby World Cup qualifying,1,10343,65,607.983
+2023 Rugby World Cup squads,1,10346,66,610.915
+2023 Rugby World Cup statistics,1,10780,67,635.595
+2025 Women's Rugby World Cup,1,10789,68,646.513
+2027 Men's Rugby World Cup,1,10788,69,646.781
+2027 Rugby World Cup,1,10787,70,647.04
+2031 Men's Rugby World Cup,1,10813,71,650.903
+2031 Rugby World Cup,1,10812,72,651.172
+AMF Futsal World Cup,1,10852,73,654.372
+ARFU Asian Rugby Series,1,10989,74,661.178
+Acrobatic Gymnastics World Championships,1,11129,75,667.589
+Aerobic Gymnastics World Championships,1,11349,76,683.522
+Africa Men's Sevens,1,11372,77,698.722
+Africa Women's Sevens,1,11469,78,703.699
+Americas Rugby Challenge,1,11582,79,712.287
+Americas Rugby Championship,1,11584,80,715.056
+Americas Rugby Trophy,1,11728,81,722.39
+Apartheid,1,11728,82,725.709
+Aquabike World Championship,1,13433,83,771.868
+Arab Rugby Sevens Men's Tournament,1,13582,84,785.323
+Arab Rugby Sevens Women's Tournament,1,13582,85,785.525
+Archery World Cup,1,13582,86,785.737
+Argentina national rugby union team,1,13917,87,798.864
+Artistic Billiards World Championship,1,14245,88,814.669
+Artistic Gymnastics World Cup,1,14385,89,830.223
+Artistic Skating World Championships,1,14575,90,845.913
+Asia Rugby,1,15057,91,869.844
+Asia Rugby Championship,1,15212,92,878.299
+Asia Rugby Sevens Series,1,15288,93,885.051
+Asia Rugby U19 Championship,1,15338,94,890.96
+Asia Rugby Women's Championship,1,15363,95,894.779
+
+Exceeded max time

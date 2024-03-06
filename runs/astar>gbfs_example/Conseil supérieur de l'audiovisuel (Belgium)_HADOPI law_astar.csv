@@ -1,0 +1,14 @@
+Node,Level,Total Cost,Priority Queue Size,Distance,Elapsed Time
+Conseil supérieur de l'audiovisuel (Belgium),0,0,0,1,0.0
+Television,1,0.8037189245223999,9,2,2.474
+Federalism,1,0.8237294405698776,1712,3,39.698
+Belgium,1,0.8442786931991577,2144,4,50.198
+Cable television,1,0.8600378930568695,3324,5,77.74
+Radio,1,0.867485448718071,4290,6,100.804
+France,1,0.8767905980348587,5104,7,119.141
+Press release,1,0.8906924054026604,6957,8,159.667
+Bruxelles,1,0.9764603842049837,7080,9,164.06
+Conseil supérieur de l'audiovisuel,1,0.9978796131908894,7082,10,166.528
+HADOPI law,2,0.9978796131908894,7103,11,168.726
+
+"[""Conseil supérieur de l'audiovisuel (Belgium)"", ""Conseil supérieur de l'audiovisuel"", 'HADOPI law']"
