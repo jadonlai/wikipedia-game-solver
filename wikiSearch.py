@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import sys, requests, time, gensim, warnings
+import plotly.express as px
 from gensim.models import Word2Vec
 from nltk.tokenize import sent_tokenize, word_tokenize
 from sentence_transformers import SentenceTransformer, util
@@ -9,8 +10,8 @@ from matplotlib import pyplot as plt
 
 
 
-MAX_NODES = 100000
-MAX_TIME = 3600
+MAX_NODES = 200
+MAX_TIME = 900
 COST = 0.5
 
 v = 0
@@ -49,6 +50,13 @@ class Link:
     # Calculate the f value
     def set_f(self):
         self.f = self.g + self.h
+
+
+
+# Given a list of indices, return a list of positions that overlap less
+def improve_text_position(x):
+    positions = ['top center', 'bottom center', 'middle left', 'middle right']
+    return [positions[i % len(positions)] for i in range(len(x))]
 
 
 
@@ -155,7 +163,7 @@ def backtrace(parent, start, end):
 
 
 # Given a start and end goal, find the end goal from the start using BFS and return the optimal path, search dist, and time
-# Return None if no path is found or if a path is too long
+# Exit if no path is found or if a path is too long
 def bfs(start, end):
     # Start timer
     start_time = time.time()
@@ -165,14 +173,19 @@ def bfs(start, end):
     parent = {}
     parent[start] = None
     queue = []
-    queue.append(start)
+    queue.append(Link(start, 0, 0, 0, 0))
 
     # BFS
     while queue:
         # Run for max MAX_TIME
         if time.time() - start_time > MAX_TIME:
             print('Exceeded max time')
-            return None
+            sys.exit()
+        
+        # Run for max MAX_NODES nodes
+        if dist > MAX_NODES:
+            print('Exceeded max nodes')
+            sys.exit()
         
         # Pop the first element
         node = queue.pop(0)
@@ -181,41 +194,75 @@ def bfs(start, end):
 
         # Verbosity
         if v >= 1:
-            print('Distance:', dist)
-            print('Node:', node)
+            print('Node:', node.name)
         if v == 2:
+            print('Level:', node.level)
+            print('Queue Size:', len(queue))
+            print('Distance:', dist)
             print('Elapsed Time:', round(time.time() - start_time, 3))
         print()
-
-        # Run for max MAX_NODES nodes
-        if dist > MAX_NODES:
-            print('Exceeded max nodes')
-            return None
         
         # Check if the node is the end
-        if node.lower() == end.lower():
-            return backtrace(parent, start, node), dist, time.time() - start_time
+        if node.name.lower() == end.lower():
+            return backtrace(parent, start, node.name), dist, time.time() - start_time
         # Add adjacent nodes to the queue
-        links = get_links(node)
+        links = get_links(node.name)
         # Continue to the next link if no children
         if links == None:
             continue
         for adjacent in links:
             if adjacent not in parent:
-                parent[adjacent] = node
-                queue.append(adjacent)
+                parent[adjacent] = node.name
+                queue.append(Link(adjacent, 0, 0, 0, node.level + 1))
     return None
 
 
 
-# UNFINISHED
-def dfs(visited, node, end):
+# Given a start and end goal, find the end goal from the start using DFS and return the optimal path, search dist, and time
+# Exit if no path is found or if a path is too long
+def dfs(node, start, end, parent=None, dist=0, start_time=time.time()):
+    # Start of the algorithm
+    if parent is None:
+        parent = {}
+        parent[node] = None
+
+    # Run for max MAX_TIME
+    if time.time() - start_time > MAX_TIME:
+        print('Exceeded max time')
+        sys.exit()
+
+    # Run for max MAX_NODES nodes
+    if dist > MAX_NODES:
+        print('Exceeded max nodes')
+        sys.exit()
+
+    # Verbosity
+    if v >= 1:
+        print('Node:', node.name)
+    if v == 2:
+        print('Level:', node.level)
+        print('Distance:', dist)
+        print('Elapsed Time:', round(time.time() - start_time, 3))
+    print()
+
+    # Check if the node is the end
+    if node.name.lower() == end.lower():
+        return backtrace(parent, start, node.name), dist, time.time() - start_time
+    # Add adjacent nodes to the queue
+    links = get_links(node.name)
+    # Continue to the next link if no children
+    if links == None:
+        return
+    for adjacent in links:
+        if adjacent not in parent:
+            parent[adjacent] = node.name
+            dfs(Link(adjacent, 0, 0, 0, node.level + 1), start, end, parent, dist + 1, start_time)
     return None
 
 
 
 # Given a start and end goal, find the end goal from the start using GBFS or A* and return the path, search dist, and time
-# Return None if no path is found or if a path is too long
+# Exit if no path is found or if a path is too long
 def gbfs_astar(algorithm, start, end):
     # Start timer
     start_time = time.time()
@@ -231,14 +278,20 @@ def gbfs_astar(algorithm, start, end):
     nodes = []
     heuristics = []
     times = []
-    fig, ax = plt.subplots()
+    # Matplotlib
+    # fig, ax = plt.subplots()
 
     # GBFS or A*
     while pq.empty() == False:
         # Run for max MAX_TIME
         if time.time() - start_time > MAX_TIME:
             print('Exceeded max time')
-            return None
+            sys.exit()
+        
+        # Run for max MAX_NODES nodes
+        if dist > MAX_NODES:
+            print('Exceeded max nodes')
+            sys.exit()
         
         # Get the most similar link
         node = pq.get()
@@ -268,11 +321,6 @@ def gbfs_astar(algorithm, start, end):
         nodes.append(node.name)
         heuristics.append(node.f)
         times.append(time.time() - start_time)
-
-        # Run for max MAX_NODES nodes
-        if dist > MAX_NODES:
-            print('Exceeded max nodes')
-            return None
         
         # Add node to visited
         visited.add(node.name)
@@ -280,10 +328,17 @@ def gbfs_astar(algorithm, start, end):
         if node.name.lower() == end.lower():
             # Plot times vs. heuristics
             if (v >= 1):
-                ax.plot(times, heuristics, marker='o')
-                for i in range(len(times)):
-                    ax.text(times[i], heuristics[i], nodes[i], fontsize=5)
-                plt.savefig(f'{start}_{end}_{algorithm}_plot.png')
+                # Matplotlib
+                # ax.plot(times, heuristics, marker='o')
+                # for i in range(len(times)):
+                #     ax.text(times[i], heuristics[i], nodes[i], fontsize=5)
+
+                # plt.savefig(f'{start}_{end}_{algorithm}_plot.png')
+
+                # Plotly Express
+                fig = px.line(x=times, y=heuristics, markers=True, text=nodes)
+                fig.update_traces(textposition=improve_text_position(range(len(nodes))), textfont_size=10)
+                fig.write_image(f'{start}_{end}_{algorithm}_plot.png')
             # Return path
             return backtrace(parent, start, node.name), dist, time.time() - start_time
         # Get children
@@ -304,6 +359,7 @@ def gbfs_astar(algorithm, start, end):
                 # Set f and put the link into the queue
                 link.set_f()
                 pq.put(link)
+    return None
 
 
 
@@ -336,8 +392,10 @@ if __name__ == '__main__':
     if algorithm == 'bfs':
         print(bfs(start, end))
     elif algorithm == 'dfs':
-        print(dfs(start, end))
+        print(dfs(Link(start, 0, 0, 0, 0), start, end))
     elif algorithm == 'gbfs' or algorithm == 'astar':
         print(gbfs_astar(algorithm, start, end))
     elif algorithm == 'machine_learning':
+        print('Not yet implemented')
+        sys.exit()
         print(machine_learning(start, end))
