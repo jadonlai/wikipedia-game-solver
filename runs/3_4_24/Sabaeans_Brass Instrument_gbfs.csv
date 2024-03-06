@@ -1,0 +1,9 @@
+Node,Level,Total Cost,Priority Queue Size,Distance,Elapsed Time
+Sabaeans,0,0,0,1,0.0
+Staff of Moses,1,0.7021225094795227,463,2,9.835
+Bronze laver,2,0.6247277855873108,942,3,19.433
+Bronze,3,0.6187454462051392,1039,4,22.622
+Brass,4,0.22344666719436646,1444,5,30.851
+Brass instrument,5,0.0,1933,6,40.741
+
+"['Sabaeans', 'Staff of Moses', 'Bronze laver', 'Bronze', 'Brass', 'Brass instrument']"

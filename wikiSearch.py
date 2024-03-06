@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import sys, requests, time, gensim, warnings
+import sys, requests, time, gensim, warnings, csv
 import plotly.express as px
 from gensim.models import Word2Vec
 from nltk.tokenize import sent_tokenize, word_tokenize
@@ -113,6 +113,14 @@ def print_links(title):
 
 
 
+# Given a 2D array, start, end, and algorithm, save it to a csv file
+def save_to_csv(array, start, end, algorithm):
+    with open(f'{start}_{end}_{algorithm}.csv', 'w+') as f:
+        writer = csv.writer(f)
+        writer.writerows(array)
+
+
+
 # Given a list of times and a list of heuristics, plot the heuristics vs. time
 def plot(times, heuristics):
     plt.plot(times, heuristics)
@@ -162,7 +170,8 @@ def backtrace(parent, start, end):
 
 
 
-# Given a start and end goal, find the end goal from the start using BFS and return the optimal path, search dist, and time
+# Given a start and end goal,
+# find the end goal from the start using BFS and return the optimal path, search dist, and time
 # Exit if no path is found or if a path is too long
 def bfs(start, end):
     # Start timer
@@ -174,17 +183,27 @@ def bfs(start, end):
     parent[start] = None
     queue = []
     queue.append(Link(start, 0, 0, 0, 0))
+    res = [['Node', 'Level', 'Queue Size', 'Distance', 'Elapsed Time']]
 
     # BFS
     while queue:
         # Run for max MAX_TIME
-        if time.time() - start_time > MAX_TIME:
+        t = round(time.time() - start_time, 3)
+        if t > MAX_TIME:
             print('Exceeded max time')
+            # Updated res csv
+            res.append([])
+            res.append(['Exceeded max time'])
+            save_to_csv(res, start, end, 'bfs')
             sys.exit()
         
         # Run for max MAX_NODES nodes
         if dist > MAX_NODES:
             print('Exceeded max nodes')
+            # Update res csv
+            res.append([])
+            res.append(['Exceeded max nodes'])
+            save_to_csv(res, start, end, 'bfs')
             sys.exit()
         
         # Pop the first element
@@ -199,12 +218,21 @@ def bfs(start, end):
             print('Level:', node.level)
             print('Queue Size:', len(queue))
             print('Distance:', dist)
-            print('Elapsed Time:', round(time.time() - start_time, 3))
-        print()
+            print('Elapsed Time:', t)
+        if v != 0:
+            print()
+
+        # Add details to res list
+        res.append([node.name, node.level, len(queue), dist, t])
         
         # Check if the node is the end
         if node.name.lower() == end.lower():
-            return backtrace(parent, start, node.name), dist, time.time() - start_time
+            # Update res csv
+            res.append([])
+            res.append([backtrace(parent, start, node.name)])
+            save_to_csv(res, start, end, 'bfs')
+            # Return path
+            return backtrace(parent, start, node.name), dist, t
         # Add adjacent nodes to the queue
         links = get_links(node.name)
         # Continue to the next link if no children
@@ -214,26 +242,36 @@ def bfs(start, end):
             if adjacent not in parent:
                 parent[adjacent] = node.name
                 queue.append(Link(adjacent, 0, 0, 0, node.level + 1))
-    return None
+    sys.exit()
 
 
 
-# Given a start and end goal, find the end goal from the start using DFS and return the optimal path, search dist, and time
+# Given a node, start, end goal, parent dict, search dist, start time, and res list,
+# find the end goal from the start using DFS and return the optimal path, search dist, and time
 # Exit if no path is found or if a path is too long
-def dfs(node, start, end, parent=None, dist=0, start_time=time.time()):
+def dfs(node, start, end, parent=None, dist=0, start_time=time.time(), res = [['Node', 'Level', 'Distance', 'Elapsed Time']]):
     # Start of the algorithm
     if parent is None:
         parent = {}
         parent[node] = None
 
     # Run for max MAX_TIME
-    if time.time() - start_time > MAX_TIME:
+    t = round(time.time() - start_time, 3)
+    if t > MAX_TIME:
         print('Exceeded max time')
+        # Update res csv
+        res.append([])
+        res.append(['Exceeded max time'])
+        save_to_csv(res, start, end, 'dfs')
         sys.exit()
 
     # Run for max MAX_NODES nodes
     if dist > MAX_NODES:
         print('Exceeded max nodes')
+        # Update res csv
+        res.append([])
+        res.append(['Exceeded max nodes'])
+        save_to_csv(res, start, end, 'dfs')
         sys.exit()
 
     # Verbosity
@@ -242,12 +280,21 @@ def dfs(node, start, end, parent=None, dist=0, start_time=time.time()):
     if v == 2:
         print('Level:', node.level)
         print('Distance:', dist)
-        print('Elapsed Time:', round(time.time() - start_time, 3))
-    print()
+        print('Elapsed Time:', t)
+    if v != 0:
+        print()
+
+    # Add details to res list
+    res.append([node.name, node.level, dist, t])
 
     # Check if the node is the end
     if node.name.lower() == end.lower():
-        return backtrace(parent, start, node.name), dist, time.time() - start_time
+        # Update res csv
+        res.append([])
+        res.append([backtrace(parent, start, node.name)])
+        save_to_csv(res, start, end, 'dfs')
+        # Return path
+        return backtrace(parent, start, node.name), dist, t
     # Add adjacent nodes to the queue
     links = get_links(node.name)
     # Continue to the next link if no children
@@ -257,11 +304,12 @@ def dfs(node, start, end, parent=None, dist=0, start_time=time.time()):
         if adjacent not in parent:
             parent[adjacent] = node.name
             dfs(Link(adjacent, 0, 0, 0, node.level + 1), start, end, parent, dist + 1, start_time)
-    return None
+    sys.exit()
 
 
 
-# Given a start and end goal, find the end goal from the start using GBFS or A* and return the path, search dist, and time
+# Given an algorithm, start, and end goal,
+# find the end goal from the start using GBFS or A* and return the path, search dist, and time
 # Exit if no path is found or if a path is too long
 def gbfs_astar(algorithm, start, end):
     # Start timer
@@ -278,19 +326,29 @@ def gbfs_astar(algorithm, start, end):
     nodes = []
     heuristics = []
     times = []
+    res = [['Node', 'Level', 'Total Cost', 'Priority Queue Size', 'Distance', 'Elapsed Time']]
     # Matplotlib
     # fig, ax = plt.subplots()
 
     # GBFS or A*
     while pq.empty() == False:
         # Run for max MAX_TIME
-        if time.time() - start_time > MAX_TIME:
+        t = round(time.time() - start_time, 3)
+        if t > MAX_TIME:
             print('Exceeded max time')
+            # Update res csv
+            res.append([])
+            res.append(['Exceeded max time'])
+            save_to_csv(res, start, end, algorithm)
             sys.exit()
         
         # Run for max MAX_NODES nodes
         if dist > MAX_NODES:
             print('Exceeded max nodes')
+            # Update res csv
+            res.append([])
+            res.append(['Exceeded max nodes'])
+            save_to_csv(res, start, end, algorithm)
             sys.exit()
         
         # Get the most similar link
@@ -314,20 +372,24 @@ def gbfs_astar(algorithm, start, end):
                 print('Cost + Heuristic:', node.f)
             print('Priority Queue Size:', pq.qsize())
             print('Distance:', dist)
-            print('Elapsed Time:', round(time.time() - start_time, 3))
-        print()
+            print('Elapsed Time:', t)
+        if v != 0:
+            print()
+
+        # Add details to res list
+        res.append([node.name, node.level, node.f, pq.qsize(), dist, t])
 
         # Graph
         nodes.append(node.name)
         heuristics.append(node.f)
-        times.append(time.time() - start_time)
+        times.append(t)
         
         # Add node to visited
         visited.add(node.name)
         # Check if node is the end
         if node.name.lower() == end.lower():
             # Plot times vs. heuristics
-            if (v >= 1):
+            if (v == 2):
                 # Matplotlib
                 # ax.plot(times, heuristics, marker='o')
                 # for i in range(len(times)):
@@ -339,8 +401,12 @@ def gbfs_astar(algorithm, start, end):
                 fig = px.line(x=times, y=heuristics, markers=True, text=nodes)
                 fig.update_traces(textposition=improve_text_position(range(len(nodes))), textfont_size=10)
                 fig.write_image(f'{start}_{end}_{algorithm}_plot.png')
+            # Update res csv
+            res.append([])
+            res.append([backtrace(parent, start, node.name)])
+            save_to_csv(res, start, end, algorithm)
             # Return path
-            return backtrace(parent, start, node.name), dist, time.time() - start_time
+            return backtrace(parent, start, node.name), dist, t
         # Get children
         links = get_links(node.name)
         # Continue to the next link if no children
@@ -359,7 +425,7 @@ def gbfs_astar(algorithm, start, end):
                 # Set f and put the link into the queue
                 link.set_f()
                 pq.put(link)
-    return None
+    sys.exit()
 
 
 
@@ -384,7 +450,7 @@ if __name__ == '__main__':
         if args[3].isdigit() and int(args[3]) >= 0 and int(args[3]) <= 2:
             v = int(args[3])
     
-    # TEST
+    # TEST SAMPLE
     # Start = Deodorant
     # End = Parachute
     # Optimal is 3 steps (Deodorant -> Inventor -> Parachute)
