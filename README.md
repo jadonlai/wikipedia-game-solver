@@ -1,7 +1,7 @@
 # 480_Wikipedia
 
 Modules:
-requests, sentence_transformers, plotly, kaleido, anytree
+requests, sentence_transformers, plotly, kaleido
 Optional Modules:
 nltk, gensim, matplotlib
 
