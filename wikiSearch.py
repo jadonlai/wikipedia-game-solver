@@ -38,8 +38,9 @@ format = {'pages':
 
 # Class to represent a link and its information
 class Link:
-    def __init__(self, name, g, h, level):
+    def __init__(self, name, parent, g, h, level):
         self.name = name
+        self.parent = parent
         self.g = g
         self.h = h
         self.f = self.g + self.h
@@ -157,10 +158,13 @@ def get_similarities(word, links):
 
 
 # Given a parent, start, and end, return the optimal path
-def backtrace(parent, start, end):
-    path = [end]
-    while path[-1] != start:
-        path.append(parent[path[-1]])
+def backtrace(start, end):
+    cur = end
+    path = []
+    while cur.name != start:
+        path.append(cur.name)
+        cur = cur.parent
+    path.append(start)
     path.reverse()
     return path
 
@@ -175,10 +179,9 @@ def bfs(start, end):
 
     # Init variables
     dist = -1
-    parent = {}
-    parent[start] = None
+    visited = set()
     queue = []
-    queue.append(Link(start, 0, 0, 0))
+    queue.append(Link(start, None, 0, 0, 0))
     res = [['Node', 'Level', 'Queue Size', 'Distance', 'Elapsed Time']]
 
     # BFS
@@ -225,30 +228,30 @@ def bfs(start, end):
         if node.name.lower() == end.lower():
             # Update res csv
             res.append([])
-            res.append([backtrace(parent, start, node.name)])
+            res.append([backtrace(start, node)])
             save_to_csv(res, start, end, 'bfs')
             # Return path
-            return backtrace(parent, start, node.name), dist, t
+            return backtrace(start, node), dist, t
         # Add adjacent nodes to the queue
         links = get_links(node.name)
         # Continue to the next link if no children
         if links == None:
             continue
         for adjacent in links:
-            if adjacent not in parent:
-                parent[adjacent] = node.name
-                queue.append(Link(adjacent, 0, 0, node.level + 1))
+            if adjacent not in visited:
+                visited.add(adjacent)
+                queue.append(Link(adjacent, node, 0, 0, node.level + 1))
 
 
 
 # Given a node, start, end goal, parent dict, search dist, start time, and res list,
 # find the end goal from the start using DFS and return the optimal path, search dist, and time
 # Exit if no path is found or if a path is too long
-def dfs(node, start, end, parent=None, dist=0, start_time=time.time(), res = [['Node', 'Level', 'Distance', 'Elapsed Time']]):
+def dfs(node, start, end, visited=None, dist=0, start_time=time.time(), res = [['Node', 'Level', 'Distance', 'Elapsed Time']]):
     # Start of the algorithm
-    if parent is None:
-        parent = {}
-        parent[node] = None
+    if visited is None:
+        visited = set()
+        visited.add(node.name)
 
     # Run for max MAX_TIME
     t = round(time.time() - start_time, 3)
@@ -286,19 +289,19 @@ def dfs(node, start, end, parent=None, dist=0, start_time=time.time(), res = [['
     if node.name.lower() == end.lower():
         # Update res csv
         res.append([])
-        res.append([backtrace(parent, start, node.name)])
+        res.append([backtrace(start, node)])
         save_to_csv(res, start, end, 'dfs')
         # Return path
-        return backtrace(parent, start, node.name), dist, t
+        return backtrace(start, node), dist, t
     # Add adjacent nodes to the queue
     links = get_links(node.name)
     # Continue to the next link if no children
     if links == None:
         return
     for adjacent in links:
-        if adjacent not in parent:
-            parent[adjacent] = node.name
-            dfs(Link(adjacent, 0, 0, node.level + 1), start, end, parent, dist + 1, start_time)
+        if adjacent not in visited:
+            visited.add(adjacent)
+            dfs(Link(adjacent, node, 0, 0, node.level + 1), start, end, visited, dist + 1, start_time)
 
 
 
@@ -311,11 +314,9 @@ def gbfs_astar(algorithm, start, end):
 
     # Init variables
     dist = -1
-    parent = {}
-    parent[start] = None
     visited = [False] * MAX_NODES
     pq = PriorityQueue()
-    pq.put(Link(start, 0, 0, 0))
+    pq.put(Link(start, None, 0, 0, 0))
     visited = set()
     nodes = []
     heuristics = []
@@ -397,10 +398,10 @@ def gbfs_astar(algorithm, start, end):
                 fig.write_image(f'{start}_{end}_{algorithm}_plot.png')
             # Update res csv
             res.append([])
-            res.append([backtrace(parent, start, node.name)])
+            res.append([backtrace(start, node)])
             save_to_csv(res, start, end, algorithm)
             # Return path
-            return backtrace(parent, start, node.name), dist, t
+            return backtrace(start, node), dist, t
         # Get children
         links = get_links(node.name)
         # Continue to the next link if no children
@@ -410,9 +411,8 @@ def gbfs_astar(algorithm, start, end):
         # Add adjacent nodes to priority queue
         for link, similarity in similarities:
             if link not in visited:
-                parent[link] = node.name
                 # Set link class
-                link = Link(link, 0, 1 - similarity, node.level + 1)
+                link = Link(link, node, 0, 1 - similarity, node.level + 1)
                 # A* includes cost
                 if algorithm == 'astar':
                     link.g = node.f
