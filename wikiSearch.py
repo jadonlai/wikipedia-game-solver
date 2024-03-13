@@ -301,7 +301,7 @@ def dfs(node, start, end, visited=None, dist=0, start_time=time.time(), res = [[
     for adjacent in links:
         if adjacent not in visited:
             visited.add(adjacent)
-            dfs(Link(adjacent, node, 0, 0, node.level + 1), start, end, visited, dist + 1, start_time)
+            dfs(Link(adjacent, node, 0, 0, node.level + 1), start, end, visited, dist + 1, start_time, res)
 
 
 
